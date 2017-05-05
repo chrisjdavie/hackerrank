@@ -7,7 +7,7 @@ class Cylinder(list):
         self.height = sum(self)
 
     def pop(self, *args, **kwargs):
-        top = super().pop()
+        top = super().pop(*args, **kwargs)
         self.height -= top
         
 
