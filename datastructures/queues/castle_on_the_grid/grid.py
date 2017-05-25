@@ -1,34 +1,48 @@
 
 
 class Grid:
+    """The playing grid.
 
-    def __init__(self, N):
+    The data structure for the grid is a 2D list - this is as provided in the 
+    question"""
 
-        self.N = N
-        self.forbidden = set()
-        self.castle = ()
+    def __init__(self, data):
 
-    
-    def add_forbidden(self, i, j):
-        self.forbidden.add((i, j))
+        self.data = data
+        self.N = len(self.data)
 
 
     def is_valid(self, i, j):
 
-        is_valid = (i >= 0) and (j >= 0) and (i < self.N) and (j < self.N) \
-            and (i, j) not in self.forbidden
+        try:
+            is_valid = self.data[i][j] and i >= 0 and j >= 0
+        except IndexError:            
+            is_valid = False
 
         return is_valid
 
 
-    def set_castle(self, i, j):
+class BuildGrid:
 
-        self.castle = (i, j)
+    obj = Grid
 
+    @classmethod
+    def from_hackerrank_input(cls, handler):
+        
+        data = []
+        N = int(handler.read())
+        for _ in range(N):
+            data.append([])
+            line = handler.read()
+            for char in line:
+                data[-1].append(char == '.')
+        a_grid = cls.obj(data)
 
-    def is_castle(self, i, j):
+        a, b, c, d = map(int, handler.read().split())
+        castle_coords = (a, b)
+        target_coords = (c, d)
 
-        return self.castle == (i, j)
+        return a_grid, castle_coords, target_coords
 
 
 def play(N, forbidden, castle, start):
