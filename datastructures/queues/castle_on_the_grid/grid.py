@@ -1,6 +1,7 @@
 
-from queue import Queue
+from collections import defaultdict
 from itertools import product
+from queue import Queue
 
 class Grid:
     """The playing grid.
@@ -15,7 +16,6 @@ class Grid:
 
 
     def is_valid(self, i, j):
-
         try:
             is_valid = self.data[i][j] and i >= 0 and j >= 0
         except IndexError:            
@@ -52,14 +52,16 @@ def play(game_grid, castle, target):
     # queue has coordinates and moves taken to get there
 
     min_moves_to_target = game_grid.N**2 + 1
+    visited = defaultdict(lambda: game_grid.N**2 + 1)
+
     moves_queue = Queue()
     moves_queue.put((*castle, -1))
 
     while(not moves_queue.empty()):
         i, j, moves = moves_queue.get()
         moves += 1
-
-        if game_grid.is_valid(i, j):
+        if game_grid.is_valid(i, j) and visited[i,j] > moves and moves < min_moves_to_target:
+            visited[i,j] = moves
             if (i, j) == target:
                 min_moves_to_target = min(min_moves_to_target, moves)
             else:

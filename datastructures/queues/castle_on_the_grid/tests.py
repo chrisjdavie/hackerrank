@@ -103,9 +103,9 @@ class TestPlay(unittest.TestCase):
         a_grid = Grid(data)
 
         castle = (0, 0)
-        start = (0, 0)
+        target = (0, 0)
 
-        self.assertEqual(play(a_grid, castle, start), 0)
+        self.assertEqual(play(a_grid, castle, target), 0)
 
     
     def test_move_left(self):
@@ -113,21 +113,21 @@ class TestPlay(unittest.TestCase):
         data = [ [True, True],
                  [True, True] ]
         a_grid = Grid(data)
-        start = (0, 0)
         castle = (1, 0)
+        target = (0, 0)
 
-        self.assertEqual(play(a_grid, castle, start), 1)
+        self.assertEqual(play(a_grid, castle, target), 1)
 
 
     def test_move_up(self):
 
         data = [ [True, True],
                  [True, True] ]
-        a_grid = Grid(data)       
-        start = (0, 0)
-        castle = (0, 1)
+        a_grid = Grid(data)
+        castle = (0, 1)       
+        target = (0, 0)
 
-        self.assertEqual(play(a_grid, castle, start), 1)
+        self.assertEqual(play(a_grid, castle, target), 1)
 
 
     def test_move_up_left(self):
@@ -135,20 +135,20 @@ class TestPlay(unittest.TestCase):
         data = [ [True, True],
                  [True, True] ]
         a_grid = Grid(data)
-        start = (0, 0)
         castle = (1, 1)
-        self.assertEqual(play(a_grid, castle, start), 2)
+        target = (0, 0)
+        self.assertEqual(play(a_grid, castle, target), 2)
 
 
-    def test_longer_solution_with_forbidden(self):
+    def test_solution_with_forbidden(self):
 
-        data = [ [True, True, True],
-                 [True, True, True],
-                 [True, True, True] ]
+        data = [ [True, False, True],
+                 [True, True,  True],
+                 [True, True,  True] ]
         a_grid = Grid(data)
-        start = (0, 0)
         castle = (0, 2)
-        self.assertEqual(play(a_grid, castle, start), 4)
+        target = (0, 0)
+        self.assertEqual(play(a_grid, castle, target), 4)
 
 
     def test_two_valid_solutions_different_lengths(self):
@@ -158,7 +158,7 @@ class TestPlay(unittest.TestCase):
                  [True, False, True, True],
                  [True, True,  True, True] ]
         a_grid = Grid(data)
-        start = (0, 1)
-        castle = (2, 1)
-        self.assertEqual(play(a_grid, castle, start), 4)
+        castle = (1, 0)
+        target = (1, 2)
+        self.assertEqual(play(a_grid, castle, target), 4)
 
