@@ -1,4 +1,6 @@
 
+from queue import Queue
+from itertools import product
 
 class Grid:
     """The playing grid.
@@ -30,20 +32,39 @@ class BuildGrid:
     def from_hackerrank_input(cls, handler):
         
         data = []
-        N = int(handler.read())
+        N = int(handler.readline().strip())
         for _ in range(N):
             data.append([])
-            line = handler.read()
+            line = handler.readline().strip()
             for char in line:
                 data[-1].append(char == '.')
         a_grid = cls.obj(data)
 
-        a, b, c, d = map(int, handler.read().split())
+        a, b, c, d = map(int, handler.readline().strip().split())
         castle_coords = (a, b)
         target_coords = (c, d)
 
         return a_grid, castle_coords, target_coords
 
 
-def play(N, forbidden, castle, start):
-    pass
+def play(game_grid, castle, target):
+
+    # queue has coordinates and moves taken to get there
+
+    min_moves_to_target = game_grid.N**2 + 1
+    moves_queue = Queue()
+    moves_queue.put((*castle, -1))
+
+    while(not moves_queue.empty()):
+        i, j, moves = moves_queue.get()
+        moves += 1
+
+        if game_grid.is_valid(i, j):
+            if (i, j) == target:
+                min_moves_to_target = min(min_moves_to_target, moves)
+            else:
+                for delta_i, delta_j in [[0, -1], [0, 1], [-1, 0], [1, 0]]:
+                    moves_queue.put((i + delta_i, j + delta_j, moves))
+
+    return min_moves_to_target
+
