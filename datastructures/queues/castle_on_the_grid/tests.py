@@ -58,12 +58,12 @@ class TestGrid(unittest.TestCase):
     def test_is_not_valid_forbidden(self):
 
         data = self.build_grid(3)
-        i, j = 1, 2
-        data[i][j] = False
+        j, i = 1, 2
+        data[j][i] = False
 
         a_grid = Grid(data)
 
-        self.assertIs(a_grid.is_valid(i, j), False)
+        self.assertIs(a_grid.is_valid(j, i), False)
 
 
 class TestBuildGrid(unittest.TestCase):
@@ -93,7 +93,6 @@ class TestBuildGrid(unittest.TestCase):
         self.assertSequenceEqual(coords_target_out, coords_target_expected)
 
 
-
 class TestPlay(unittest.TestCase):
 
     def test_no_moves(self):
@@ -113,7 +112,7 @@ class TestPlay(unittest.TestCase):
         data = [ [True, True],
                  [True, True] ]
         a_grid = Grid(data)
-        castle = (1, 0)
+        castle = (0, 1)
         target = (0, 0)
 
         self.assertEqual(play(a_grid, castle, target), 1)
@@ -124,7 +123,7 @@ class TestPlay(unittest.TestCase):
         data = [ [True, True],
                  [True, True] ]
         a_grid = Grid(data)
-        castle = (0, 1)       
+        castle = (1, 0)       
         target = (0, 0)
 
         self.assertEqual(play(a_grid, castle, target), 1)
@@ -148,7 +147,7 @@ class TestPlay(unittest.TestCase):
         a_grid = Grid(data)
         castle = (0, 2)
         target = (0, 0)
-        self.assertEqual(play(a_grid, castle, target), 4)
+        self.assertEqual(play(a_grid, castle, target), 3)
 
 
     def test_two_valid_solutions_different_lengths(self):
@@ -160,5 +159,21 @@ class TestPlay(unittest.TestCase):
         a_grid = Grid(data)
         castle = (1, 0)
         target = (1, 2)
-        self.assertEqual(play(a_grid, castle, target), 4)
+        self.assertEqual(play(a_grid, castle, target), 3)
+
+
+class TestRegression(unittest.TestCase):
+
+    def test_from_hackerrank_0(self):
+        # This came from not including the direction in the dictionary that was caching the
+        # the moves taken to get to a square
+
+        data = [ [True, True, True,  True],
+                 [True, True, True,  True],
+                 [True, True, True,  True],
+                 [True, True, False, True] ]
+        a_grid = Grid(data)
+        castle = (3, 0)
+        target = (3, 3)
+        self.assertEqual(play(a_grid, castle, target), 3)
 

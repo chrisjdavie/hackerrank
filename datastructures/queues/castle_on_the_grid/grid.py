@@ -15,9 +15,9 @@ class Grid:
         self.N = len(self.data)
 
 
-    def is_valid(self, i, j):
+    def is_valid(self, j, i):
         try:
-            is_valid = self.data[i][j] and i >= 0 and j >= 0
+            is_valid = self.data[j][i] and i >= 0 and j >= 0
         except IndexError:            
             is_valid = False
 
@@ -49,24 +49,26 @@ class BuildGrid:
 
 def play(game_grid, castle, target):
 
-    # queue has coordinates and moves taken to get there
+    # queue has coordinates, moves and preceeding direction taken to get there
 
     min_moves_to_target = game_grid.N**2 + 1
     visited = defaultdict(lambda: game_grid.N**2 + 1)
 
-    moves_queue = Queue()
-    moves_queue.put((*castle, -1))
+    seach_queue = Queue()
+    seach_queue.put((*castle, 0, None))
 
-    while(not moves_queue.empty()):
-        i, j, moves = moves_queue.get()
-        moves += 1
-        if game_grid.is_valid(i, j) and visited[i,j] > moves and moves < min_moves_to_target:
-            visited[i,j] = moves
-            if (i, j) == target:
-                min_moves_to_target = min(min_moves_to_target, moves)
-            else:
-                for delta_i, delta_j in [[0, -1], [0, 1], [-1, 0], [1, 0]]:
-                    moves_queue.put((i + delta_i, j + delta_j, moves))
+    while(not seach_queue.empty()):
+        j, i, moves, dirn_old = seach_queue.get()
+
+        if (j, i) == target:
+            min_moves_to_target = min(min_moves_to_target, moves)
+
+        elif game_grid.is_valid(j, i) and visited[j, i, dirn_old] > moves and moves < min_moves_to_target:
+            visited[j, i, dirn_old] = moves
+
+            for dirn_new in [(0, -1), (0, 1), (-1, 0), (1, 0)]:
+                moves_new = moves + (dirn_new != dirn_old)
+                seach_queue.put((j + dirn_new[0], i + dirn_new[1], moves_new, dirn_new))
 
     return min_moves_to_target
 
